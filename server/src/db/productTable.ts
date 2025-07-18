@@ -1,5 +1,5 @@
 import { mysqlTable, int, varchar, decimal, boolean, datetime } from "drizzle-orm/mysql-core";
-
+import { usersTable } from "./usersTable";
 import { productSubCategoryTable } from "./productSubCategoryTable";
 import { brandTable } from "./brandTable";
 import { taxTypeTable } from "./taxTypeTable";
@@ -22,6 +22,7 @@ import { productDetailsTable } from "./productDetailTable";
   export const productTable = mysqlTable("Product", {
     ID: int().primaryKey().autoincrement(),
     Name: varchar({ length: 100 }).notNull(),
+    UserID: int().references(() => usersTable.ID), // Add this line
     ProductSubCategoryID: int().references(() => productSubCategoryTable.ID),
     ProductBrandID: int().references(() => brandTable.ID),
     TaxTypeID: int().references(() => taxTypeTable.ID),
