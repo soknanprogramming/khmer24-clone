@@ -11,6 +11,7 @@ import productRequirementRouter from './routes/productRequirementRoute'
 import userRouter from './routes/userRoute'
 import locationRouter from './routes/locationRoute';
 import componentRouter from './routes/componentRoute';
+import productRouter from './routes/productRoute';
 import "./auth/local-strategy";
 
 const app = express()
@@ -53,6 +54,8 @@ app.use("/api/auth", authRoute)
 app.use("/api/productSellRequirement", productRequirementRouter)
 app.use("/api/locations", locationRouter)
 app.use("/api/components", componentRouter)
+app.use("/api/products", productRouter); // <-- Add this line
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running http://localhost:${process.env.PORT}`)

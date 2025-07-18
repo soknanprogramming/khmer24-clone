@@ -5,30 +5,31 @@ import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import useUser from '../store/useUser';
 
-
-
-
-const RegisterPage: React.FC = () => {
+const PostPage: React.FC = () => {
     const navigate = useNavigate();
     const { user, status } = useUser();
     const [subCategoriesId, setSubCategoriesId] = useState<number | null>(null);
     const [workspaceLocation, setWorkspaceLocation] = useState<"main" | "sub" | "choose">("main");
-    useEffect( () => {
-        (async () => {
+
+    useEffect(() => {
+        const checkAuth = async () => {
             await status();
             if (!user) {
                 navigate("/login");
             }
-            console.log("PostPage: user", user);
-        })();
+        };
+        checkAuth();
+    }, [user, navigate, status]);
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [navigate, status]);
+    if (!user) {
+        // Render a loading state or null while checking for authentication
+        return <div>Loading...</div>;
+    }
+
     if (workspaceLocation === "main"){
         return (
             <div className="flex justify-center">
                 <div className='w-3xl bg-amber-100 mt-1.5'>
-                    {/* <ChooseACategory setSubCategoriesId={setSubCategoriesId} setWorkspaceLocation={setWorkspaceLocation}/> */}
                     <ChooseOption/>
                 </div>
             </div>
@@ -44,6 +45,9 @@ const RegisterPage: React.FC = () => {
             </div>
         )
     }
+
+    // Fallback for any other state
+    return null;
 }
 
-export default RegisterPage;
+export default PostPage;

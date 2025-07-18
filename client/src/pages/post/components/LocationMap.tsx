@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 interface LatLng {
@@ -8,8 +7,12 @@ interface LatLng {
   lng: number;
 }
 
+interface LocationMapProps {
+  onLocationChange: (latLng: LatLng) => void;
+}
+
 const LocationMarker: React.FC<{
-  onLocationSelected: (latLng: LatLng, address: string) => void;
+  onLocationSelected: (latLng: LatLng) => void;
 }> = ({ onLocationSelected }) => {
   const [position, setPosition] = useState<LatLng | null>(null);
 
@@ -17,35 +20,17 @@ const LocationMarker: React.FC<{
     click(e) {
       const { lat, lng } = e.latlng;
       setPosition({ lat, lng });
-
-      // Reverse geocoding with OpenStreetMap
-      fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`,
-        {
-          headers: {
-            "User-Agent": "YourAppName/1.0 (your@email.com)"
-          }
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          const address = data.display_name || "";
-          onLocationSelected({ lat, lng }, address);
-        });
+      onLocationSelected({ lat, lng });
     }
   });
 
   return position ? <Marker position={position}></Marker> : null;
 };
 
-const LocationMap: React.FC = () => {
-  const [selectedLatLng, setSelectedLatLng] = useState<LatLng | null>(null);
-  const [address, setAddress] = useState<string>("");
+const LocationMap: React.FC<LocationMapProps> = ({ onLocationChange }) => {
 
-  const handleLocationSelected = (latLng: LatLng, addr: string) => {
-    setSelectedLatLng(latLng);
-    console.log(latLng);
-    setAddress(addr);
+  const handleLocationSelected = (latLng: LatLng) => {
+    onLocationChange(latLng);
   };
 
   return (
@@ -61,7 +46,6 @@ const LocationMap: React.FC = () => {
         />
         <LocationMarker onLocationSelected={handleLocationSelected} />
       </MapContainer>
-
     </div>
   );
 };

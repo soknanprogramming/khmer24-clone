@@ -3,6 +3,7 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/mysql2";
 import { productTable } from "../db/productTable";
 import { productImageTable } from "../db/productImageTable";
+import { productDetailsTable } from "../db/productDetailTable"; // Import productDetailsTable
 import { AuthRequest } from "../types/AuthRequest";
 
 const db = drizzle(process.env.DATABASE_URL!);
@@ -21,7 +22,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
       conditionId, cityId, districtId, communeId, address,
       discount, discountType, freeDelivery, vga, cpu, ram, storage,
       screenSize, taxTypeId, colorId, transmissionId, engineTypeId, bodyTypeId,
-      latitude, longitude
+      latitude, longitude, contactName, email, phoneNumber1, phoneNumber2, phoneNumber3
     } = authReq.body;
 
     const userId = authReq.user.ID;
@@ -32,6 +33,18 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
+    // 1. Create an entry in product_details table first
+    const productDetailsResult = await db.insert(productDetailsTable).values({
+      Username: contactName,
+      Email: email,
+      PhoneNumber: phoneNumber1,
+      PhoneNumber2: phoneNumber2,
+      PhoneNumber3: phoneNumber3,
+    });
+
+    const newProductDetailId = productDetailsResult[0].insertId;
+
+    // 2. Use the new ID to create the product
     const result = await db.insert(productTable).values({
       Name: name,
       Price: price,
@@ -44,9 +57,9 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
       CommuneID: communeId,
       Address: address,
       UserID: userId,
-      Discount: discount,
+      Discount: discount === '' ? null : discount,
       DiscountAsPercentage: discountType === 'percent',
-      IsFreeDelivery: freeDelivery,
+      IsFreeDelivery: freeDelivery === 'true',
       VgaID: vga,
       CpuID: cpu,
       RamID: ram,
@@ -59,8 +72,8 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
       BodyTypeID: bodyTypeId,
       Latitude: latitude,
       Longitude: longitude,
-      CreatedDate: new Date(),
       IsActive: true,
+      ProductDetailID: newProductDetailId, // Assign the new product detail ID
     });
 
     const newProductId = result[0].insertId;

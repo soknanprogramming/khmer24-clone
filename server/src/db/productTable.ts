@@ -51,7 +51,7 @@ import { productDetailsTable } from "./productDetailTable";
   
     Latitude: decimal({ precision: 10, scale: 6 }),
     Longitude: decimal({ precision: 10, scale: 6 }),
-    CreatedDate: datetime().notNull(),
+    CreatedDate: datetime().notNull().default(new Date()),
     IsActive: boolean().notNull(),
 
     ProductDetailID : int().references(() => productDetailsTable.ID),
@@ -59,4 +59,3 @@ import { productDetailsTable } from "./productDetailTable";
     
     
   });
-  

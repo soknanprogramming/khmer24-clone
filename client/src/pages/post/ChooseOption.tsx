@@ -8,6 +8,12 @@ import LocationPopup from './components/LocationPopup';
 import BrandPopup from './components/BrandPopup';
 import LocationMap from './components/LocationMap';
 
+// Add LatLng interface
+interface LatLng {
+  lat: number;
+  lng: number;
+}
+
 const ChooseOption: React.FC = () => {
   const { requirements, loading, error, fetchRequirements } = useSellRequirements();
   const {
@@ -22,6 +28,9 @@ const ChooseOption: React.FC = () => {
   const [cityId, setCityId] = useState<number | null>(null);
   const [districtsId, setDistrictsId] = useState<number | null>(null);
   const [communesId, setCommunesId] = useState<number | null>(null);
+
+  // State for location from map
+  const [location, setLocation] = useState<LatLng | null>(null);
   
   // State for files and dynamic inputs
   const [photos, setPhotos] = useState<File[]>([]);
@@ -84,11 +93,14 @@ const ChooseOption: React.FC = () => {
     }
   };
 
+  const handleLocationChange = (latLng: LatLng) => {
+    setLocation(latLng);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // --- VALIDATION ---
-    // Check for required selections before submitting
     if (photos.length === 0) {
       alert('Please upload at least one photo.');
       return;
@@ -104,27 +116,28 @@ const ChooseOption: React.FC = () => {
 
     const formDataToSend = new FormData();
 
-    // Append all text/number fields from the main form state
     Object.entries(formData).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
         formDataToSend.append(key, String(value));
       }
     });
+
+    if (location) {
+      formDataToSend.append('latitude', String(location.lat));
+      formDataToSend.append('longitude', String(location.lng));
+    }
     
-    // Append the IDs from the pop-up selections
     formDataToSend.append('productBrandId', String(brandId));
     formDataToSend.append('cityId', String(cityId));
     formDataToSend.append('districtId', String(districtsId));
     formDataToSend.append('communeId', String(communesId));
 
-    // Append phone numbers
     phoneNumbers.forEach((phone, index) => {
       if (phone.trim()) {
         formDataToSend.append(`phoneNumber${index + 1}`, phone);
       }
     });
 
-    // Append photos
     photos.forEach((photo) => {
       formDataToSend.append('photos', photo);
     });
@@ -143,18 +156,15 @@ const ChooseOption: React.FC = () => {
 
       if (response.status === 201) {
         alert('Product posted successfully!');
-        // Optionally, you can clear the form or redirect the user here
       }
     } catch (err) {
       console.error('Failed to post product:', err);
       let alertMessage = 'An unexpected error occurred. Please try again.';
       if (axios.isAxiosError(err) && err.response) {
-        // Check for validation errors from the server
         if (err.response.data.errors) {
           const validationErrors = err.response.data.errors.map((error: any) => error.msg).join('\n');
           alertMessage = `Please fix the following issues:\n${validationErrors}`;
         } else if (err.response.data.message) {
-          // Check for a generic message from the server
           alertMessage = `Server Error: ${err.response.data.message}`;
         }
       }
@@ -251,6 +261,50 @@ const ChooseOption: React.FC = () => {
               </div>
             </div>
 
+            {/* Discount Section */}
+            <div>
+              <label className="font-semibold text-gray-700 block mb-1">Discount</label>
+              <div className="flex items-center">
+                <input
+                  type="number"
+                  name="discount"
+                  value={formData.discount}
+                  onChange={handleChange}
+                  className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3 rounded-r-none`}
+                  placeholder="e.g., 10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, discountType: 'percent' }))}
+                  className={`px-4 ${fieldHeightClass} border-t border-b ${formData.discountType === 'percent' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 border-gray-300'}`}
+                >
+                  %
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, discountType: 'dollar' }))}
+                  className={`px-4 ${fieldHeightClass} border rounded-r-md ${formData.discountType === 'dollar' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 border-gray-300'}`}
+                >
+                  $
+                </button>
+              </div>
+            </div>
+
+            {/* Free Delivery Checkbox */}
+            <div className="flex items-center pt-2">
+              <input
+                type="checkbox"
+                id="freeDelivery"
+                name="freeDelivery"
+                checked={formData.freeDelivery}
+                onChange={handleChange}
+                className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <label htmlFor="freeDelivery" className="ml-2 font-semibold text-gray-700">
+                Free Delivery
+              </label>
+            </div>
+
             <div>
               <label className="font-semibold text-gray-700 block mb-1">Description <b className="text-red-500">*</b></label>
               <textarea name="description" value={formData.description} onChange={handleChange} rows={4} className={`w-full ${inputBorderClass} ${focusRingClass} px-3 py-2`} required></textarea>
@@ -270,7 +324,7 @@ const ChooseOption: React.FC = () => {
                 <input type="text" name="address" value={formData.address} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3`} required/>
             </div>
             <div id='mapping' className='mt-4'>
-              <LocationMap/>
+              <LocationMap onLocationChange={handleLocationChange} />
             </div>
         </div>
 
