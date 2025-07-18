@@ -1,0 +1,33 @@
+import { mysqlTable, int, boolean} from "drizzle-orm/mysql-core";
+import { productSubCategoryTable } from "./productSubCategoryTable";
+export const productRequirementsTable = mysqlTable("product_requirements", {
+  ID: int().autoincrement().primaryKey(),
+  productSubCategoryID: int().references(() => productSubCategoryTable.ID).unique(),
+  ProductName: boolean().notNull().default(true),
+  ProductBrand: boolean().notNull().default(true),
+  TaxType: boolean().notNull(),
+  Condition: boolean().notNull(),
+  Color: boolean().notNull(),
+  Transmission: boolean().notNull(),
+  EngineType: boolean().notNull(),
+  BodyType: boolean().notNull(),
+  Vga: boolean().notNull(),
+  Cpu: boolean().notNull(),
+  Ram: boolean().notNull(),
+  Storage: boolean().notNull(),
+  Screen: boolean().notNull(),
+  Price: boolean().notNull().default(true),
+  Discount: boolean().notNull(),
+  IsFreeDelivery: boolean().notNull().default(true),
+  Description: boolean().notNull().default(true),
+  City: boolean().notNull().default(true),
+  District: boolean().notNull().default(true),
+  Commune: boolean().notNull().default(true),
+  Address: boolean().notNull().default(true),
+  Latitude: boolean().notNull(),
+  Longitude: boolean().notNull(),
+  CreatedDate: boolean().notNull().default(true),
+  IsActive: boolean().notNull().default(true),
+  
+  ProductDetail: boolean().notNull().default(true),
+})
