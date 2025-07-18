@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { eq, inArray } from "drizzle-orm";
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/mysql2";
 import { productTable } from "../db/productTable";
@@ -91,6 +92,93 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
 
   } catch (error) {
     console.error("Error creating product:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// ... (existing createProduct function)
+
+export const getUserProducts = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user.ID;
+    if (!userId) {
+      return res.status(401).json({ message: "User not found or not authenticated" });
+    }
+
+    const products = await db.select().from(productTable).where(eq(productTable.UserID, userId));
+
+    if (products.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    const productIds = products.map(p => p.ID);
+    
+    const images = await db.select().from(productImageTable).where(inArray(productImageTable.ProductID, productIds));
+
+    // Create a map for quick lookup of the first image for each product
+    const imageMap = new Map<number, string>();
+    images.forEach(image => {
+      if (!imageMap.has(image.ProductID) && image.SortOrder === 1) {
+        imageMap.set(image.ProductID, image.Photo);
+      }
+    });
+     // If no image with SortOrder 1, fallback to any image
+    images.forEach(image => {
+        if (!imageMap.has(image.ProductID)) {
+            imageMap.set(image.ProductID, image.Photo);
+        }
+    });
+
+    const productsWithImages = products.map(product => {
+      return {
+        ...product,
+        imageUrl: imageMap.get(product.ID) || null
+      };
+    });
+
+    res.status(200).json(productsWithImages);
+  } catch (error) {
+    console.error("Error fetching user products:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const products = await db.select().from(productTable).where(eq(productTable.IsActive, true));
+
+    if (products.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    const productIds = products.map(p => p.ID);
+    
+    const images = await db.select().from(productImageTable).where(inArray(productImageTable.ProductID, productIds));
+
+    // Create a map for quick lookup of the first image for each product
+    const imageMap = new Map<number, string>();
+    images.forEach(image => {
+      if (!imageMap.has(image.ProductID) && image.SortOrder === 1) {
+        imageMap.set(image.ProductID, image.Photo);
+      }
+    });
+     // If no image with SortOrder 1, fallback to any image
+    images.forEach(image => {
+        if (!imageMap.has(image.ProductID)) {
+            imageMap.set(image.ProductID, image.Photo);
+        }
+    });
+
+    const productsWithImages = products.map(product => {
+      return {
+        ...product,
+        imageUrl: imageMap.get(product.ID) || null
+      };
+    });
+
+    res.status(200).json(productsWithImages);
+  } catch (error) {
+    console.error("Error fetching all products:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

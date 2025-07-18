@@ -7,6 +7,8 @@ import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa';
 import LocationPopup from './components/LocationPopup';
 import BrandPopup from './components/BrandPopup';
 import LocationMap from './components/LocationMap';
+import { useNavigate } from "react-router-dom";
+
 
 // Add LatLng interface
 interface LatLng {
@@ -15,6 +17,7 @@ interface LatLng {
 }
 
 const ChooseOption: React.FC = () => {
+  const navigate = useNavigate();
   const { requirements, loading, error, fetchRequirements } = useSellRequirements();
   const {
     vga, cpu, ram, storage, screen,
@@ -156,6 +159,7 @@ const ChooseOption: React.FC = () => {
 
       if (response.status === 201) {
         alert('Product posted successfully!');
+        navigate(`/`);
       }
     } catch (err) {
       console.error('Failed to post product:', err);

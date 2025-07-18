@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import useUser from "../../store/useUser";
+import { Link } from "react-router-dom"; // Import Link
 
 type ProfileDropdownProps = {
     className?: string;
@@ -40,12 +41,12 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({className}) => {
             {isOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                     <div className="py-1">
-                        <a
-                            href="/profile"
+                        <Link
+                            to="/my-ads"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
-                            Profile
-                        </a>
+                            My Ads
+                        </Link>
                         <a
                             href="/settings"
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
