@@ -4,6 +4,7 @@ import { usersTable } from "../db/usersTable";
 import { drizzle } from "drizzle-orm/mysql2";
 import { eq, or } from "drizzle-orm";
 import "dotenv/config";
+import bcrypt from "bcrypt";
 
 
 const db = drizzle(process.env.DATABASE_URL!);
@@ -48,14 +49,17 @@ export default passport.use(
         return done(null, false, { message: "User not found" });
       }
 
-      // ✅ Check the password
-      if (findUser[0].Password !== password) {
+      const user = findUser[0];
+
+      // ✅ Check the password using bcrypt
+      const isMatch = await bcrypt.compare(password, user.Password);
+      if (!isMatch) {
         // Use the 'done' callback for incorrect password
         return done(null, false, { message: "Password is incorrect" });
       }
-      
+
       // ✅ If successful, pass the user object
-      return done(null, findUser[0]);
+      return done(null, user);
 
     } catch (err) {
       // For actual database or server errors

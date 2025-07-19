@@ -4,6 +4,7 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/mysql2";
 import { and, or, eq } from "drizzle-orm";
 import { usersTable } from "../db/usersTable";
+import bcrypt from "bcrypt";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -18,7 +19,7 @@ type userRegisterRes = {
 }
 
 export const userRegister = async (
-        req: Request<{}, {}, UserLogin>, 
+        req: Request<{}, {}, UserLogin>,
         res: Response<userRegisterRes>
     ) => {
     try {
@@ -39,22 +40,26 @@ export const userRegister = async (
 
     if (existingUser.length > 0) {
         return res.status(400).json({
-            isNameExist: existingUser.some(user => 
-                user.FirstName.toLowerCase() === req.body.firstName.toLowerCase() && 
+            isNameExist: existingUser.some(user =>
+                user.FirstName.toLowerCase() === req.body.firstName.toLowerCase() &&
                 user.LastName.toLowerCase() === req.body.lastName.toLowerCase()
             ),
-            isPhoneNumberExist: existingUser.some(user => 
+            isPhoneNumberExist: existingUser.some(user =>
                 user.PhoneNumber === req.body.phoneNumber
             )
         });
     }
+
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
     // If no existing user found, proceed with insertion
     await db.insert(usersTable).values({
         FirstName: req.body.firstName,
         LastName: req.body.lastName,
         PhoneNumber: req.body.phoneNumber,
-        Password: req.body.password,
+        Password: hashedPassword, // Store the hashed password
         UserName: req.body.firstName + req.body.lastName,
     });
 

@@ -11,6 +11,7 @@ interface AdDetails {
         Price: string;
         Description: string;
         CreatedDate: string;
+        ConditionID: number;
     };
     brand: { Name: string } | null;
     subCategory: { Name: string } | null;
@@ -62,6 +63,19 @@ const AdDetailPage: React.FC = () => {
 
     const { product, brand, subCategory, mainCategory, condition, city, contactDetails, images } = ad;
 
+    const getConditionName = () => {
+      if (condition) {
+        return condition.Name;
+      }
+      if (product.ConditionID === 1) {
+        return 'Used';
+      }
+      if (product.ConditionID === 2) {
+        return 'New';
+      }
+      return 'N/A';
+    };
+
     return (
         <div className="flex justify-center bg-gray-100 py-4">
             <div className="w-6xl grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -97,7 +111,7 @@ const AdDetailPage: React.FC = () => {
                             <p><strong>Main Category:</strong> {mainCategory?.Name}</p>
                             <p><strong>Category:</strong> {subCategory?.Name}</p>
                             <p><strong>Brand:</strong> {brand?.Name}</p>
-                            <p><strong>Condition:</strong> {condition?.Name}</p>
+                            <p><strong>Condition:</strong> {getConditionName()}</p>
                         </div>
                     </div>
 
