@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { MdAddAPhoto } from "react-icons/md";
 
 const SellingCard: React.FC = () => (
-    <div className='bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 flex flex-col'>
+    <div className='bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 flex flex-col hover:shadow-lg transition-shadow duration-300'>
         <div className='relative h-48 bg-blue-50 flex items-center justify-center'>
             <div className='text-center text-blue-500'>
                 <MdAddAPhoto className='mx-auto text-4xl mb-2'/>

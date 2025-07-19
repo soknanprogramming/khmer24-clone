@@ -12,7 +12,13 @@ interface Ad {
   location: string;
 }
 
-const AdLists: React.FC = () => {
+interface AdListsProps {
+    mainCategoryId?: number;
+    subCategoryId?: number;
+    brandId?: number;
+}
+
+const AdLists: React.FC<AdListsProps> = ({ mainCategoryId, subCategoryId, brandId }) => {
     const [ads, setAds] = useState<Ad[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -22,7 +28,12 @@ const AdLists: React.FC = () => {
         const fetchAds = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get<Ad[]>(`${apiUrl}/api/products/public`);
+                const params = new URLSearchParams();
+                if (brandId) params.append('brandId', String(brandId));
+                if (subCategoryId) params.append('subCategoryId', String(subCategoryId));
+                if (mainCategoryId) params.append('mainCategoryId', String(mainCategoryId));
+                
+                const response = await axios.get<Ad[]>(`${apiUrl}/api/products/public`, { params });
                 setAds(response.data);
                 setError(null);
             } catch (err) {
@@ -33,7 +44,7 @@ const AdLists: React.FC = () => {
             }
         };
         fetchAds();
-    }, [apiUrl]);
+    }, [apiUrl, mainCategoryId, subCategoryId, brandId]);
 
     if (loading) {
         return <div className="text-center p-10">Loading ads...</div>;
@@ -50,6 +61,7 @@ const AdLists: React.FC = () => {
                 {ads.map((ad) => (
                     <AdCard
                         key={ad.ID}
+                        ID={ad.ID}
                         imgUrl={ad.imageUrl ? `${apiUrl}/uploads/products/${ad.imageUrl}` : '/profile/user-icon.webp'}
                         title={ad.Name}
                         Price={Number(ad.Price)}

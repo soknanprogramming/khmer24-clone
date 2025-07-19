@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProduct, getUserProducts, getAllProducts } from "../handlers/productHandler";
+import { createProduct, getUserProducts, getAllProducts, getProductById } from "../handlers/productHandler";
 import { ensureAuthenticated } from "../middleware/ensureAuthenticated";
 import {
   productValidationRules,
@@ -9,7 +9,8 @@ import { upload } from "../middleware/multerConfig";
 
 const router = Router();
 
-router.get("/public", getAllProducts as any); // <-- New public route for all ads
+router.get("/public", getAllProducts as any); 
+router.get("/public/:id", getProductById as any); // <-- Add this new route
 
 router.get("/mine", ensureAuthenticated, getUserProducts as any);
 

@@ -1,10 +1,18 @@
 import { Request, Response } from "express";
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, and } from "drizzle-orm";
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/mysql2";
 import { productTable } from "../db/productTable";
 import { productImageTable } from "../db/productImageTable";
 import { productDetailsTable } from "../db/productDetailTable"; // Import productDetailsTable
+import { productSubCategoryTable } from "../db/productSubCategoryTable";
+import { brandTable } from "../db/brandTable";
+import { productConditionTable } from "../db/productConditionTable";
+import { cityTable } from "../db/cityTable";
+import { districtTable } from "../db/districtTable";
+import { communeTable } from "../db/communeTable";
+import { usersTable } from "../db/usersTable";
+import { productCategoryTable } from "../db/productCategoryTable";
 import { AuthRequest } from "../types/AuthRequest";
 
 const db = drizzle(process.env.DATABASE_URL!);
@@ -143,9 +151,37 @@ export const getUserProducts = async (req: AuthRequest, res: Response) => {
   }
 };
 
+// ... (createProduct and getUserProducts functions remain unchanged)
+
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const products = await db.select().from(productTable).where(eq(productTable.IsActive, true));
+    const { mainCategoryId, subCategoryId, brandId } = req.query;
+    let products;
+
+    // Build the query condition by starting with the base condition (IsActive = true)
+    let condition = eq(productTable.IsActive, true);
+
+    if (brandId) {
+      // If brandId is present, it's the most specific filter.
+      condition = and(condition, eq(productTable.ProductBrandID, Number(brandId)));
+    } else if (subCategoryId) {
+      // If no brandId but subCategoryId is present, filter by that.
+      condition = and(condition, eq(productTable.ProductSubCategoryID, Number(subCategoryId)));
+    } else if (mainCategoryId) {
+      // If only mainCategoryId is present, find all subcategories and filter by them.
+      const subCategoryIds = await db
+        .select({ id: productSubCategoryTable.ID })
+        .from(productSubCategoryTable)
+        .where(eq(productSubCategoryTable.ProductCategoryID, Number(mainCategoryId)));
+
+      if (subCategoryIds.length === 0) {
+        return res.status(200).json([]);
+      }
+      const ids = subCategoryIds.map(sc => sc.id);
+      condition = and(condition, inArray(productTable.ProductSubCategoryID, ids));
+    }
+
+    products = await db.select().from(productTable).where(condition);
 
     if (products.length === 0) {
       return res.status(200).json([]);
@@ -155,7 +191,6 @@ export const getAllProducts = async (req: Request, res: Response) => {
     
     const images = await db.select().from(productImageTable).where(inArray(productImageTable.ProductID, productIds));
 
-    // Create a map for quick lookup of the first image for each product
     const imageMap = new Map<number, string>();
     images.forEach(image => {
       if (!imageMap.has(image.ProductID) && image.SortOrder === 1) {
@@ -180,5 +215,68 @@ export const getAllProducts = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching all products:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+export const getProductById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const productId = Number(id);
+
+    if (isNaN(productId)) {
+      return res.status(400).json({ message: "Invalid product ID." });
+    }
+
+    const productQuery = await db
+      .select({
+        product: productTable,
+        brand: brandTable,
+        subCategory: productSubCategoryTable,
+        mainCategory: productCategoryTable,
+        condition: productConditionTable,
+        city: cityTable,
+        district: districtTable,
+        commune: communeTable,
+        contactDetails: productDetailsTable,
+        seller: usersTable,
+      })
+      .from(productTable)
+      .leftJoin(brandTable, eq(productTable.ProductBrandID, brandTable.ID))
+      .leftJoin(productSubCategoryTable, eq(productTable.ProductSubCategoryID, productSubCategoryTable.ID))
+      .leftJoin(productCategoryTable, eq(productSubCategoryTable.ProductCategoryID, productCategoryTable.ID))
+      .leftJoin(productConditionTable, eq(productTable.ConditionID, productConditionTable.ID))
+      .leftJoin(cityTable, eq(productTable.CityID, cityTable.ID))
+      .leftJoin(districtTable, eq(productTable.DistrictID, districtTable.ID))
+      .leftJoin(communeTable, eq(productTable.CommuneID, communeTable.ID))
+      .leftJoin(productDetailsTable, eq(productTable.ProductDetailID, productDetailsTable.ID))
+      .leftJoin(usersTable, eq(productTable.UserID, usersTable.ID))
+      .where(eq(productTable.ID, productId));
+      
+    if (productQuery.length === 0) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+
+    const images = await db
+      .select({
+        ID: productImageTable.ID,
+        Photo: productImageTable.Photo,
+        SortOrder: productImageTable.SortOrder,
+      })
+      .from(productImageTable)
+      .where(eq(productImageTable.ProductID, productId))
+      .orderBy(productImageTable.SortOrder);
+
+    const result = {
+      ...productQuery[0],
+      images: images,
+    };
+
+    res.status(200).json(result);
+
+  } catch (error) {
+    console.error("Error fetching product by ID:", error);
+    res.status(500).json({ message: "Internal server error." });
   }
 };

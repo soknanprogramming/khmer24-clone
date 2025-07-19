@@ -8,37 +8,29 @@ import BrandOption from '../components/BrandOption';
 import type { getBrand } from '../types/getBrand';
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-
+import AdLists from '../components/AdLists';
 
 const BrandCategoryPage: React.FC = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const location = useLocation();
-    // Create URLSearchParams object
     const queryParams = new URLSearchParams(location.search);
-
     const AdField = queryParams.get("ad_field");
-
-    // --- All hooks are called at the top level ---
     const { categories, fetchCategories, loading } = useCategories();
     const { subCategoriesName, brandName } = useParams<{subCategoriesName: string, brandName: string}>();
     const [brands, setBrands] = useState<getBrand[]>([]);
 
-    // --- Data derivation is done before conditional returns ---
     const thisCategories = categories.find((cat) => toSlug(cat.mainCategory.name) === subCategoriesName);
     const thisSubCategories = thisCategories?.subCategories.find((cat) => toSlug(cat.name) === brandName);
+    const selectedBrand = brands.find(brand => toSlug(brand.name) === AdField);
 
-    // Effect to fetch initial categories
     useEffect(() => {
         if (categories.length === 0) {
             fetchCategories();
-            console.log("Fetching categories...");
         }
     }, [categories.length, fetchCategories]);
 
-    // Effect to fetch brands for the selected sub-category
     useEffect(() => {
         const fetchBrands = async () => {
-            // The conditional logic is now safely *inside* the hook
             if (thisSubCategories?.id) {
                 try {
                     const response = await axios.get<getBrand[]>(`${apiUrl}/api/productCategory/${thisSubCategories.id}`);
@@ -49,13 +41,11 @@ const BrandCategoryPage: React.FC = () => {
             }
         };
 
-        // Only fetch brands if categories have loaded and a sub-category is found
         if (categories.length > 0 && thisSubCategories) {
             fetchBrands();
         }
-    }, [thisSubCategories, categories.length, apiUrl]); // Dependencies are correct
+    }, [thisSubCategories, categories.length, apiUrl]); 
 
-    // --- Conditional returns (early exits) are now after all hooks ---
     if (loading || categories.length === 0) {
         return <div>Loading categories...</div>;
     }
@@ -64,21 +54,15 @@ const BrandCategoryPage: React.FC = () => {
         return <div>Category or Brand not found.</div>;
     }
 
-    // --- Render JSX ---
-
-    console.log("Brand is", brands);
-
     return (
         <div className="flex justify-center">
             <div className="w-6xl bg-amber-100 mt-1.5">
-                {
-                    !AdField ? (<LinkPage levelMainCategories={thisCategories.mainCategory.name} levelSubCategories={thisSubCategories.name}/>) : (
-                        <LinkPage levelMainCategories={thisCategories.mainCategory.name} levelSubCategories={thisSubCategories.name} levelBrandCategories={AdField}/>)
-                }
+                <LinkPage levelMainCategories={thisCategories.mainCategory.name} levelSubCategories={thisSubCategories.name} levelBrandCategories={AdField ? selectedBrand?.name : undefined}/>
                 
                 <OptionMenu/>
                 { (brands.length !== 0 && !AdField) && <BrandOption brands={brands} />}
-                <h1>BrandCategory Page</h1>
+                
+                <AdLists subCategoryId={thisSubCategories.id} brandId={selectedBrand?.id} />
             </div>
         </div>
     );

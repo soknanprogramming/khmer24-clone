@@ -9,7 +9,8 @@ import RegisterPage from "./pages/RegisterPage"
 import LoginPage from "./pages/LoginPage"
 import AuthPage from "./pages/AuthPage"
 import PostPage from "./pages/PostPage"
-import MyAdsPage from "./pages/MyAdsPage" // <-- Import the new page
+import MyAdsPage from "./pages/MyAdsPage"
+import AdDetailPage from "./pages/AdDetailPage" // <-- Import the new page
 
 const App = () => {
   const fetchCategories = useCategories((state) => state.fetchCategories);
@@ -34,7 +35,8 @@ const App = () => {
         <Route path="/login" element={<LoginPage/>}/>
         <Route path="/auth" element={<AuthPage/>}/>
         <Route path="/post" element={<PostPage/>}/>
-        <Route path="/my-ads" element={<MyAdsPage />} /> {/* <-- Add the new route */}
+        <Route path="/my-ads" element={<MyAdsPage />} />
+        <Route path="/ad/:adId" element={<AdDetailPage />} /> {/* <-- Add the new route */}
         <Route path="/:subCategoriesName" element={<SubCategoryPage/>}/>
         <Route path="/:subCategoriesName/:brandName" element={<BrandCategoryPage/>}/>
       </Routes>

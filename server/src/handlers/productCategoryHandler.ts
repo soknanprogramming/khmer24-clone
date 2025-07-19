@@ -10,32 +10,30 @@ import { brandTable } from "../db/brandTable";
 const db = drizzle(process.env.DATABASE_URL!);
 
 export const productCategoryHandler = async (req: Request, res: Response) => {
-  const productCategory = await db.select().from(productCategoryTable);
+  const productCategory = await db.select().from(productCategoryTable).where(eq(productCategoryTable.IsActive, true));
 
   const mainAndSubCategories = await Promise.all(
     productCategory.map(async (m) => {
       const subCategories = await db
         .select()
         .from(productSubCategoryTable)
-        .where(eq(productSubCategoryTable.ProductCategoryID, m.ID));
-      if (m.IsActive)
-        return {
-          mainCategory: {
-            id: m.ID,
-            name: m.Name,
-            icon: m.Icon,
-          },
-          subCategories: subCategories
-            .filter((s) => s.IsActive)
-            .map((s) => ({
-              id: s.ID,
-              name: s.Name,
-              icon: s.Icon,
-            })),
-        };
+        .where(and(eq(productSubCategoryTable.ProductCategoryID, m.ID), eq(productSubCategoryTable.IsActive, true)));
+        
+      return {
+        mainCategory: {
+          id: m.ID,
+          name: m.Name,
+          icon: m.Icon,
+        },
+        subCategories: subCategories.map((s) => ({
+            id: s.ID,
+            name: s.Name,
+            icon: s.Icon,
+        })),
+      };
     })
   );
-  // console.log(mainAndSubCategories);
+  
   res.status(200).json(mainAndSubCategories);
 };
 
