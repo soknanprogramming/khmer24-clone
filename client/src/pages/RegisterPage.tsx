@@ -14,10 +14,22 @@ const RegisterPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.id]: e.target.value,
-        });
+        const { id, value } = e.target;
+    
+        if (id === 'phoneNumber') {
+            const numericValue = value.replace(/[^0-9]/g, '');
+            if (numericValue.length <= 10) {
+                setFormData({
+                    ...formData,
+                    [id]: numericValue,
+                });
+            }
+        } else {
+            setFormData({
+                ...formData,
+                [id]: value,
+            });
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -97,6 +109,8 @@ const RegisterPage: React.FC = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                         required
                         onChange={handleChange}
+                        pattern="[0-9]*"
+                        value={formData.phoneNumber}
                     />
                 </div>
 

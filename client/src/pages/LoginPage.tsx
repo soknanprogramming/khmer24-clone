@@ -46,13 +46,19 @@ const LoginPage: React.FC = () => {
                             Phone Number<span className="text-red-500">*</span>
                         </label>
                         <input
-                            type="text"
+                            type="tel"
                             id="phoneNumber"
                             placeholder="Enter your phone number"
                             value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            onChange={(e) => {
+                                const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                                if (numericValue.length <= 10) {
+                                    setPhoneNumber(numericValue);
+                                }
+                            }}
                             className="w-full p-2 border border-gray-300 rounded"
                             required
+                            pattern="[0-9]*"
                         />
                     </div>
 

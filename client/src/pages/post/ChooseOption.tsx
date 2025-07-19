@@ -79,9 +79,12 @@ const ChooseOption: React.FC = () => {
 
   const handlePhoneNumberChange = (index: number, value: string) => {
     const newPhoneNumbers = [...phoneNumbers];
-    newPhoneNumbers[index] = value;
-    setPhoneNumbers(newPhoneNumbers);
-  };
+    const numericValue = value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    if (numericValue.length <= 10) { // Optional: Limit to 10 digits
+        newPhoneNumbers[index] = numericValue;
+        setPhoneNumbers(newPhoneNumbers);
+    }
+};
 
   const addPhoneNumber = () => {
     if (phoneNumbers.length < 3) {
@@ -344,7 +347,15 @@ const ChooseOption: React.FC = () => {
               <label className="font-semibold text-gray-700 block mb-1">Phone Number(s) <b className="text-red-500">*</b></label>
               {phoneNumbers.map((phone, index) => (
                 <div key={index} className="flex items-center space-x-2 mb-2">
-                  <input type="tel" value={phone} onChange={(e) => handlePhoneNumberChange(index, e.target.value)} placeholder={`Phone Number ${index + 1}`} className={`flex-1 ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3`} required={index === 0} />
+                  <input 
+                      type="tel" 
+                      value={phone} 
+                      onChange={(e) => handlePhoneNumberChange(index, e.target.value)} 
+                      placeholder={`Phone Number ${index + 1}`} 
+                      className={`flex-1 h-11 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3`} 
+                      required={index === 0} 
+                      pattern="[0-9]*" 
+                  />
                   {phoneNumbers.length > 1 && (<button type="button" onClick={() => removePhoneNumber(index)}><FaMinusCircle size={20} className='text-red-500'/></button>)}
                   {index === phoneNumbers.length - 1 && phoneNumbers.length < 3 && (<button type="button" onClick={addPhoneNumber}><FaPlusCircle size={24} className='text-blue-500'/></button>)}
                 </div>
