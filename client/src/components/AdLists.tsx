@@ -57,7 +57,7 @@ const AdLists: React.FC<AdListsProps> = ({ mainCategoryId, subCategoryId, brandI
     return (
         <div className='pt-5 flex justify-center pb-3'>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 '>
-                <SellingCard />
+                {/* <SellingCard /> */}
                 {ads.map((ad) => (
                     <AdCard
                         key={ad.ID}

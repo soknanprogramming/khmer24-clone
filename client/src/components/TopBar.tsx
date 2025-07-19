@@ -32,7 +32,7 @@ const TopBar: React.FC = () => {
     };
 
     return(
-        <header className='bg-white sticky top-0 h-14 w-screen border-b-2 border-gray-300 shadow-sm border-solid flex items-center justify-center'>
+        <header className='bg-white z-80 sticky top-0 h-14 w-screen border-b-2 border-gray-300 shadow-sm border-solid flex items-center justify-center'>
             <nav className='bg-amber-200 w-6xl h-11 flex items-center justify-between px-4'>
                 <div id='logo-and-lang' className='w-48 h-8 bg-amber-50 flex items-center'>
                     <Link to="/" onClick={handleLogoClick}>

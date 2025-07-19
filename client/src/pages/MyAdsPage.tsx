@@ -21,17 +21,13 @@ const MyAdsPage: React.FC = () => {
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  // 1. Check user authentication status ONCE on component mount.
   useEffect(() => {
     status();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array ensures this runs only once.
+  }, []);
 
-  // 2. This effect handles redirection or data fetching after the auth check.
   useEffect(() => {
-    if (!userLoading) { // Wait until the initial auth check is done.
+    if (!userLoading) {
       if (user) {
-        // User is logged in, fetch their posts.
         setPostsLoading(true);
         axios.get<UserPost[]>(`${apiUrl}/api/products/mine`, { withCredentials: true })
           .then(response => {
@@ -46,28 +42,35 @@ const MyAdsPage: React.FC = () => {
             setPostsLoading(false);
           });
       } else {
-        // Auth check is done, but there's no user. Redirect.
         navigate('/login');
       }
     }
   }, [user, userLoading, navigate, apiUrl]);
 
-  // 3. Handle loading states.
+  const handleDelete = async (id: number) => {
+    if (window.confirm('Are you sure you want to delete this ad?')) {
+        try {
+            await axios.delete(`${apiUrl}/api/products/${id}`, { withCredentials: true });
+            setPosts(posts.filter(post => post.ID !== id));
+        } catch (err) {
+            setError('Failed to delete ad. Please try again later.');
+            console.error(err);
+        }
+    }
+  };
+
   if (userLoading || (postsLoading && user)) {
     return <div className="text-center p-10">Loading...</div>;
   }
   
-  // If we reach here and there's no user, it means the redirect is happening.
   if (!user) {
     return null;
   }
   
-  // 4. Handle error state.
   if (error) {
     return <div className="text-center p-10 text-red-500">{error}</div>;
   }
 
-  // 5. Render the page content.
   return (
     <div className="flex justify-center">
         <div className="w-6xl mt-1.5 p-4">
@@ -84,11 +87,14 @@ const MyAdsPage: React.FC = () => {
                 {posts.map(post => (
                 <AdCard
                     key={post.ID}
+                    ID={post.ID}
                     title={post.Name}
                     Price={Number(post.Price)}
                     imgUrl={post.imageUrl ? `${apiUrl}/uploads/products/${post.imageUrl}` : '/profile/user-icon.webp'}
                     createdDate={post.CreatedDate}
                     location={post.location}
+                    showDeleteButton={true}
+                    onDelete={handleDelete}
                 />
                 ))}
             </div>

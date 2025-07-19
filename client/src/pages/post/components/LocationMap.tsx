@@ -34,7 +34,7 @@ const LocationMap: React.FC<LocationMapProps> = ({ onLocationChange }) => {
   };
 
   return (
-    <div>
+    <div className="z-0">
       <MapContainer
         className="rounded-md w-full h-52 z-0"
         center={[11.554304053577502, 104.84582522884013]}

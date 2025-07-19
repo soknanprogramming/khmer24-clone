@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { eq, inArray, and } from "drizzle-orm";
+import { eq, inArray, and, SQL } from "drizzle-orm";
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/mysql2";
 import { productTable } from "../db/productTable";
 import { productImageTable } from "../db/productImageTable";
-import { productDetailsTable } from "../db/productDetailTable"; // Import productDetailsTable
+import { productDetailsTable } from "../db/productDetailTable";
 import { productSubCategoryTable } from "../db/productSubCategoryTable";
 import { brandTable } from "../db/brandTable";
 import { productConditionTable } from "../db/productConditionTable";
@@ -14,6 +14,8 @@ import { communeTable } from "../db/communeTable";
 import { usersTable } from "../db/usersTable";
 import { productCategoryTable } from "../db/productCategoryTable";
 import { AuthRequest } from "../types/AuthRequest";
+import * as fs from 'fs';
+import * as path from 'path';
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -155,68 +157,68 @@ export const getUserProducts = async (req: AuthRequest, res: Response) => {
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const { mainCategoryId, subCategoryId, brandId } = req.query;
-    let products;
-
-    // Build the query condition by starting with the base condition (IsActive = true)
-    let condition = eq(productTable.IsActive, true);
-
-    if (brandId) {
-      // If brandId is present, it's the most specific filter.
-      condition = and(condition, eq(productTable.ProductBrandID, Number(brandId)));
-    } else if (subCategoryId) {
-      // If no brandId but subCategoryId is present, filter by that.
-      condition = and(condition, eq(productTable.ProductSubCategoryID, Number(subCategoryId)));
-    } else if (mainCategoryId) {
-      // If only mainCategoryId is present, find all subcategories and filter by them.
-      const subCategoryIds = await db
-        .select({ id: productSubCategoryTable.ID })
-        .from(productSubCategoryTable)
-        .where(eq(productSubCategoryTable.ProductCategoryID, Number(mainCategoryId)));
-
-      if (subCategoryIds.length === 0) {
-        return res.status(200).json([]);
-      }
-      const ids = subCategoryIds.map(sc => sc.id);
-      condition = and(condition, inArray(productTable.ProductSubCategoryID, ids));
-    }
-
-    products = await db.select().from(productTable).where(condition);
-
-    if (products.length === 0) {
-      return res.status(200).json([]);
-    }
-
-    const productIds = products.map(p => p.ID);
-    
-    const images = await db.select().from(productImageTable).where(inArray(productImageTable.ProductID, productIds));
-
-    const imageMap = new Map<number, string>();
-    images.forEach(image => {
-      if (!imageMap.has(image.ProductID) && image.SortOrder === 1) {
-        imageMap.set(image.ProductID, image.Photo);
-      }
-    });
-     // If no image with SortOrder 1, fallback to any image
-    images.forEach(image => {
-        if (!imageMap.has(image.ProductID)) {
-            imageMap.set(image.ProductID, image.Photo);
-        }
-    });
-
-    const productsWithImages = products.map(product => {
-      return {
-        ...product,
-        imageUrl: imageMap.get(product.ID) || null
-      };
-    });
-
-    res.status(200).json(productsWithImages);
-  } catch (error) {
-    console.error("Error fetching all products:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+  const { mainCategoryId, subCategoryId, brandId } = req.query;
+     let products;
+ 
+     // Build the query condition by starting with the base condition (IsActive = true)
+     let condition: SQL<unknown> | undefined = eq(productTable.IsActive, true);
+ 
+  if (brandId) {
+  // If brandId is present, it's the most specific filter.
+       condition = and(condition, eq(productTable.ProductBrandID, Number(brandId)));
+     } else if (subCategoryId) {
+  // If no brandId but subCategoryId is present, filter by that.
+       condition = and(condition, eq(productTable.ProductSubCategoryID, Number(subCategoryId)));
+     } else if (mainCategoryId) {
+  // If only mainCategoryId is present, find all subcategories and filter by them.
+  const subCategoryIds = await db
+  .select({ id: productSubCategoryTable.ID })
+  .from(productSubCategoryTable)
+  .where(eq(productSubCategoryTable.ProductCategoryID, Number(mainCategoryId)));
+ 
+  if (subCategoryIds.length === 0) {
+  return res.status(200).json([]);
+       }
+  const ids = subCategoryIds.map(sc => sc.id);
+       condition = and(condition, inArray(productTable.ProductSubCategoryID, ids));
+     }
+ 
+     products = await db.select().from(productTable).where(condition);
+ 
+  if (products.length === 0) {
+  return res.status(200).json([]);
+     }
+ 
+  const productIds = products.map(p => p.ID);
+  
+  const images = await db.select().from(productImageTable).where(inArray(productImageTable.ProductID, productIds));
+ 
+  const imageMap = new Map<number, string>();
+     images.forEach(image => {
+  if (!imageMap.has(image.ProductID) && image.SortOrder === 1) {
+         imageMap.set(image.ProductID, image.Photo);
+       }
+     });
+      // If no image with SortOrder 1, fallback to any image
+     images.forEach(image => {
+         if (!imageMap.has(image.ProductID)) {
+             imageMap.set(image.ProductID, image.Photo);
+         }
+     });
+ 
+  const productsWithImages = products.map(product => {
+  return {
+  ...product,
+         imageUrl: imageMap.get(product.ID) || null
+       };
+     });
+ 
+     res.status(200).json(productsWithImages);
+   } catch (error) {
+     console.error("Error fetching all products:", error);
+     res.status(500).json({ message: "Internal server error" });
+   }
+ };
 
 
 
@@ -278,5 +280,52 @@ export const getProductById = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching product by ID:", error);
     res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+// ... (existing createProduct, getUserProducts, getAllProducts, getProductById functions)
+
+export const deleteProduct = async (req: AuthRequest, res: Response) => {
+  try {
+    const productId = parseInt(req.params.id, 10);
+    const userId = req.user.ID;
+
+    if (isNaN(productId)) {
+      return res.status(400).json({ message: "Invalid product ID" });
+    }
+
+    const productResult = await db.select().from(productTable).where(eq(productTable.ID, productId));
+    const product = productResult[0];
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (product.UserID !== userId) {
+      return res.status(403).json({ message: "You are not authorized to delete this product" });
+    }
+
+    const images = await db.select().from(productImageTable).where(eq(productImageTable.ProductID, productId));
+
+    for (const image of images) {
+      const imagePath = path.join('src/uploads/products', image.Photo);
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          console.error(`Failed to delete image: ${imagePath}`, err);
+        }
+      });
+    }
+
+    await db.delete(productImageTable).where(eq(productImageTable.ProductID, productId));
+    await db.delete(productTable).where(eq(productTable.ID, productId));
+    if (product.ProductDetailID) {
+      await db.delete(productDetailsTable).where(eq(productDetailsTable.ID, product.ProductDetailID));
+    }
+
+    res.status(200).json({ message: "Product deleted successfully" });
+
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
