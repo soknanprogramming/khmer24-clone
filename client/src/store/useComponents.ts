@@ -37,7 +37,8 @@ const useComponents = create<ComponentsState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get<Component[]>(`${apiUrl}/api/components/vga`);
-      set({ vga: response.data, loading: false });
+      const data = Array.isArray(response.data) ? response.data : [];
+      set({ vga: data, loading: false });
     } catch (err) {
       const errorMessage = axios.isAxiosError(err) ? err.message : String(err);
       set({ error: errorMessage, loading: false });
@@ -48,7 +49,8 @@ const useComponents = create<ComponentsState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get<Component[]>(`${apiUrl}/api/components/cpu`);
-      set({ cpu: response.data, loading: false });
+      const data = Array.isArray(response.data) ? response.data : [];
+      set({ cpu: data, loading: false });
     } catch (err) {
       const errorMessage = axios.isAxiosError(err) ? err.message : String(err);
       set({ error: errorMessage, loading: false });
@@ -59,7 +61,8 @@ const useComponents = create<ComponentsState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get<Component[]>(`${apiUrl}/api/components/ram`);
-      set({ ram: response.data, loading: false });
+      const data = Array.isArray(response.data) ? response.data : [];
+      set({ ram: data, loading: false });
     } catch (err) {
       const errorMessage = axios.isAxiosError(err) ? err.message : String(err);
       set({ error: errorMessage, loading: false });
@@ -70,7 +73,8 @@ const useComponents = create<ComponentsState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get<Component[]>(`${apiUrl}/api/components/storage`);
-      set({ storage: response.data, loading: false });
+      const data = Array.isArray(response.data) ? response.data : [];
+      set({ storage: data, loading: false });
     } catch (err) {
       const errorMessage = axios.isAxiosError(err) ? err.message : String(err);
       set({ error: errorMessage, loading: false });
@@ -81,7 +85,8 @@ const useComponents = create<ComponentsState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get<Component[]>(`${apiUrl}/api/components/screen`);
-      set({ screen: response.data, loading: false });
+      const data = Array.isArray(response.data) ? response.data : [];
+      set({ screen: data, loading: false });
     } catch (err) {
       const errorMessage = axios.isAxiosError(err) ? err.message : String(err);
       set({ error: errorMessage, loading: false });
@@ -100,11 +105,11 @@ const useComponents = create<ComponentsState>((set, get) => ({
       ]);
 
       set({
-        vga: vgaRes.data,
-        cpu: cpuRes.data,
-        ram: ramRes.data,
-        storage: storageRes.data,
-        screen: screenRes.data,
+        vga: Array.isArray(vgaRes.data) ? vgaRes.data : [],
+        cpu: Array.isArray(cpuRes.data) ? cpuRes.data : [],
+        ram: Array.isArray(ramRes.data) ? ramRes.data : [],
+        storage: Array.isArray(storageRes.data) ? storageRes.data : [],
+        screen: Array.isArray(screenRes.data) ? screenRes.data : [],
         loading: false,
       });
     } catch (err) {

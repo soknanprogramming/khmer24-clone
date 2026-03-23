@@ -10,9 +10,10 @@ import { toSlug } from '../func/toSlug';
 
 const Home: React.FC = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    const categories = useCategories((state) => state.categories);
+    // const categories = useCategories((state) => state.categories);
+    const { categories } = useCategories();
 
-    const mainCategories: Items = categories.filter(Boolean).map((category : mainAndSubCategories) => ({        imageURL: `${apiUrl}/uploads/${category.mainCategory.icon}`,
+    const mainCategories: Items = (Array.isArray(categories) ? categories : []).map((category : mainAndSubCategories) => ({        imageURL: `${apiUrl}/uploads/${category.mainCategory.icon}`,
         title: category.mainCategory.name,
         url: `/${toSlug(category.mainCategory.name)}`
     }));

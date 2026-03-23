@@ -11,10 +11,10 @@ import AuthPage from "./pages/AuthPage"
 import PostPage from "./pages/PostPage"
 import MyAdsPage from "./pages/MyAdsPage"
 import AdDetailPage from "./pages/AdDetailPage" // <-- Import the new page
+import Settings from "./components/Settings"
 
 const App = () => {
-  const fetchCategories = useCategories((state) => state.fetchCategories);
-  const categories = useCategories((state) => state.categories);
+  const { fetchCategories, categories } = useCategories();
   useEffect(() => {
     fetchCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -36,6 +36,7 @@ const App = () => {
         <Route path="/auth" element={<AuthPage/>}/>
         <Route path="/post" element={<PostPage/>}/>
         <Route path="/my-ads" element={<MyAdsPage />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/ad/:adId" element={<AdDetailPage />} /> {/* <-- Add the new route */}
         <Route path="/:subCategoriesName" element={<SubCategoryPage/>}/>
         <Route path="/:subCategoriesName/:brandName" element={<BrandCategoryPage/>}/>

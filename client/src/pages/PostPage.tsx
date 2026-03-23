@@ -1,4 +1,4 @@
-import ChooseACategory from "./post/ChooseACategory";
+// import ChooseACategory from "./post/ChooseACategory";
 import ChooseSubCategory from "./post/ChooseSubCategory";
 import ChooseOption from "./post/ChooseOption";
 import React, {useEffect, useState} from "react";

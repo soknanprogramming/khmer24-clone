@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SellingCard from './SellingCard';
+// import SellingCard from './SellingCard';
 import AdCard from './AdCard';
 import axios from 'axios';
 
@@ -34,7 +34,8 @@ const AdLists: React.FC<AdListsProps> = ({ mainCategoryId, subCategoryId, brandI
                 if (mainCategoryId) params.append('mainCategoryId', String(mainCategoryId));
                 
                 const response = await axios.get<Ad[]>(`${apiUrl}/api/products/public`, { params });
-                setAds(response.data);
+                // Ensure ads is always an array to prevent .map() errors
+                setAds(Array.isArray(response.data) ? response.data : []);
                 setError(null);
             } catch (err) {
                 setError('Failed to fetch ads. Please try again later.');

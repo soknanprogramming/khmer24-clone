@@ -8,9 +8,11 @@
     "dev": "node --import=tsx --watch src/index.ts",
     "run": "node --import=tsx src/index.ts",
     "build": "tsc",
+    "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx src/db/seed/seed.ts"
   },
   "keywords": [],
   "author": "",

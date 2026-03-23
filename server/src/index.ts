@@ -17,8 +17,8 @@ import "./auth/local-strategy";
 const app = express()
 
 app.use(cors({
-  origin: "http://localhost:5173", // 👈 your frontend URL
-  credentials: true,              // 👈 allow cookies/sessions
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",  // your frontend URL
+  credentials: true,                                            // allow cookies/sessions
 }));
 app.use(express.json())
 app.use(cookieParser("helloworld"));
@@ -57,6 +57,6 @@ app.use("/api/components", componentRouter)
 app.use("/api/products", productRouter); // <-- Add this line
 
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running http://localhost:${process.env.PORT}`)
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server is running http://localhost:${process.env.PORT || 3000}`)
 })
