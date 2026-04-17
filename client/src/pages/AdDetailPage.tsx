@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaPhone, FaMapMarkerAlt, FaShieldAlt } from 'react-icons/fa';
+import { FaPhone, FaMapMarkerAlt, FaShieldAlt, FaTrash } from 'react-icons/fa';
+import useUser from '../store/useUser';
 
 // Define the type for the detailed ad data
 interface AdDetails {
@@ -12,6 +13,7 @@ interface AdDetails {
         Description: string;
         CreatedDate: string;
         ConditionID: number;
+        UserID: number;
     };
     brand: { Name: string } | null;
     subCategory: { Name: string } | null;
@@ -29,6 +31,8 @@ interface AdDetails {
 
 const AdDetailPage: React.FC = () => {
     const { adId } = useParams<{ adId: string }>();
+    const navigate = useNavigate();
+    const { user } = useUser();
     const [ad, setAd] = useState<AdDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -57,11 +61,25 @@ const AdDetailPage: React.FC = () => {
         }
     }, [adId, apiUrl]);
 
+    const handleDelete = async () => {
+        if (!ad) return;
+        if (window.confirm('Are you sure you want to delete this ad?')) {
+            try {
+                await axios.delete(`${apiUrl}/api/products/${ad.product.ID}`, { withCredentials: true });
+                navigate('/my-ads');
+            } catch (err) {
+                alert('Failed to delete ad. Please try again later.');
+                console.error(err);
+            }
+        }
+    };
+
     if (loading) return <div className="text-center p-10">Loading...</div>;
     if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
     if (!ad) return <div className="text-center p-10">Ad not found.</div>;
 
     const { product, brand, subCategory, mainCategory, condition, city, contactDetails, images } = ad;
+    const isOwner = user && user.ID === product.UserID;
 
     const getConditionName = () => {
       if (condition) {
@@ -87,16 +105,27 @@ const AdDetailPage: React.FC = () => {
                         <div className="w-full h-96 bg-gray-200 flex items-center justify-center rounded-lg overflow-hidden mb-2">
                             <img src={mainImage} alt={product.Name} className="object-contain h-full w-full"/>
                         </div>
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-2 overflow-x-auto pb-2">
                             {images.map(img => (
-                                <div key={img.ID} className="w-20 h-20 border-2 border-transparent hover:border-blue-500 cursor-pointer rounded overflow-hidden" onClick={() => setMainImage(`${apiUrl}/uploads/products/${img.Photo}`)}>
+                                <div key={img.ID} className="w-20 h-20 flex-shrink-0 border-2 border-transparent hover:border-blue-500 cursor-pointer rounded overflow-hidden" onClick={() => setMainImage(`${apiUrl}/uploads/products/${img.Photo}`)}>
                                     <img src={`${apiUrl}/uploads/products/${img.Photo}`} alt="thumbnail" className="w-full h-full object-cover"/>
                                 </div>
                             ))}
                         </div>
                     </div>
                     
-                    <h1 className="text-2xl font-bold text-gray-800 mt-4">{product.Name}</h1>
+                    <div className="flex justify-between items-start mt-4">
+                        <h1 className="text-2xl font-bold text-gray-800">{product.Name}</h1>
+                        {isOwner && (
+                            <button 
+                                onClick={handleDelete}
+                                className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors shadow-md"
+                                title="Delete Ad"
+                            >
+                                <FaTrash size={18} />
+                            </button>
+                        )}
+                    </div>
                     <p className="text-3xl font-bold text-red-600 my-2">${Number(product.Price).toLocaleString()}</p>
 
                     <div className="text-sm text-gray-500 mb-4">

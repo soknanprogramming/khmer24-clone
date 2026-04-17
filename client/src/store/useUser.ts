@@ -3,6 +3,7 @@ import axios from "axios";
 
 // {userName : UserName, firstName: FirstName, lastName: LastName}
 type User = {
+  ID: number;
   userName: string;
   firstName: string;
   lastName: string;

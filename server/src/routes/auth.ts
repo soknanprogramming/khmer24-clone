@@ -17,7 +17,7 @@ router.post(
     const LastName = req.user.LastName;
     
     const ID = req.user.ID;
-    res.status(200).json({userName : UserName, firstName: FirstName, lastName: LastName});
+    res.status(200).json({ID, userName : UserName, firstName: FirstName, lastName: LastName});
   }
 );
 
@@ -28,7 +28,7 @@ router.get("/status", (req: AuthRequest, res: any) => {
         const ID = req.user.ID;
         const FirstName = req.user.FirstName;
         const LastName = req.user.LastName;
-        return res.status(200).json({userName : UserName, firstName: FirstName, lastName: LastName});
+        return res.status(200).json({ID, userName : UserName, firstName: FirstName, lastName: LastName});
     }
     return res.sendStatus(401);
 });
