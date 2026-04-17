@@ -20,10 +20,12 @@ const Home: React.FC = () => {
 
     return(
         <div className='flex justify-center'>
-            <div className='w-6xl bg-amber-100 mt-1.5'>
+            <div className='w-6xl mt-4'>
                 <Ad />
-                <h1 className='tracking-wider my-2 '><b>Welcome to ume24.com, the biggest online market in Cambodia.</b></h1>
-                <Categories items={mainCategories} sizeItem={6} />
+                <h1 className='text-xl font-bold text-gray-800 my-6'>Welcome to ume24.com, the biggest online market in Cambodia.</h1>
+                <div className='bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100'>
+                    <Categories items={mainCategories} sizeItem={6} />
+                </div>
                 <AdLists />
             </div>
         </div>

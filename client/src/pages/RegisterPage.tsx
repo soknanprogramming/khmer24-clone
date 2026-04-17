@@ -12,6 +12,7 @@ const RegisterPage: React.FC = () => {
         confirmPassword: '',
     });
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -35,9 +36,11 @@ const RegisterPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
+        setLoading(true);
 
         if (formData.password !== formData.confirmPassword) {
             setError("Passwords do not match.");
+            setLoading(false);
             return;
         }
 
@@ -65,6 +68,8 @@ const RegisterPage: React.FC = () => {
             } else {
                 setError("An unexpected error occurred.");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -139,24 +144,29 @@ const RegisterPage: React.FC = () => {
                         onChange={handleChange}
                     />
                 </div>
+<button
+    type="submit"
+    disabled={loading}
+    className={`w-full py-2 px-4 rounded font-bold text-white transition-colors ${
+        loading
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-primary hover:bg-primary-hover shadow-sm"
+    }`}
+>
+    {loading ? "Registering..." : "Register"}
+</button>
+</form>
 
-                <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-                >
-                    Register
-                </button>
-            </form>
+<p className="mt-6 text-sm text-center text-gray-600">
+Already have an account?{" "}
+<Link
+    to="/login"
+    className="text-secondary font-semibold hover:underline"
+>
+    Login
+</Link>
+</p>
 
-            <p className="mt-4 text-sm">
-                Already have an account?{" "}
-                <Link
-                    to="/login"
-                    className="text-blue-500 hover:underline"
-                >
-                    Login
-                </Link>
-            </p>
         </div>
     );
 };

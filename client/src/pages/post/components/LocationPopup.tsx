@@ -125,7 +125,7 @@ const LocationPopup: React.FC<LocationPopupProp> = ({
         />
       </div>
       <Popup
-        className="overflow-y-scroll !p-0 h-4/5 z-100 w-xl border-2 border-green-600"
+        className="overflow-y-scroll !p-0 h-4/5 z-100 w-xl"
         isOpen={isPopupOpen}
         onClose={() => setPopupOpen(false)}
       >
@@ -133,7 +133,7 @@ const LocationPopup: React.FC<LocationPopupProp> = ({
           {/* City Selection */}
           {selectStep === "City" ? (
             <div id="City">
-              <h1 onClick={handleReset} className="bg-green-500 p-2 text-2xl w-full">City</h1>
+              <h1 onClick={handleReset} className="bg-primary text-white p-3 text-xl font-bold w-full cursor-pointer">Select City/Province</h1>
               {locationData.map((city) => (
                 <p
                   key={city.id}
@@ -144,7 +144,7 @@ const LocationPopup: React.FC<LocationPopupProp> = ({
                     setCommunesId(null); // reset commune
                     setSelectStep("Districts");
                   }}
-                  className="p-2 border-b hover:bg-gray-50 cursor-pointer"
+                  className="p-3 border-b hover:bg-gray-100 cursor-pointer text-gray-700"
                 >
                   {city.name}
                 </p>
@@ -155,7 +155,7 @@ const LocationPopup: React.FC<LocationPopupProp> = ({
           {/* District Selection */}
           {selectStep === "Districts" ? (
             <div id="Districts">
-              <h1 onClick={handleReset} className="bg-green-500 p-2 text-2xl w-full">Districts</h1>
+              <h1 onClick={handleReset} className="bg-primary text-white p-3 text-xl font-bold w-full cursor-pointer">Select District</h1>
               {cityId !== null &&
                 locationData
                   .find((city) => city.id === cityId)
@@ -168,7 +168,7 @@ const LocationPopup: React.FC<LocationPopupProp> = ({
                         setCommunesId(null); // reset commune
                         setSelectStep("Communes");
                       }}
-                      className="p-2 border-b hover:bg-gray-50 cursor-pointer"
+                      className="p-3 border-b hover:bg-gray-100 cursor-pointer text-gray-700"
                     >
                       {district.name}
                     </p>
@@ -179,7 +179,7 @@ const LocationPopup: React.FC<LocationPopupProp> = ({
           {/* Commune Selection */}
           {selectStep === "Communes" ? (
             <div id="Communes">
-              <h1 onClick={handleReset} className="bg-green-500 p-2 text-2xl w-full">Communes</h1>
+              <h1 onClick={handleReset} className="bg-primary text-white p-3 text-xl font-bold w-full cursor-pointer">Select Commune</h1>
               {cityId !== null &&
                 districtsId !== null &&
                 locationData

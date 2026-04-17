@@ -93,7 +93,7 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({ onPhotosChange }) => {
 
       {/* Add Photo Button */}
       <div
-        className="mt-3 bg-blue-100 hover:bg-blue-200 text-blue-600 text-center py-2 rounded-md cursor-pointer flex justify-center items-center space-x-2"
+        className="mt-3 bg-gray-100 hover:bg-gray-200 text-gray-600 text-center py-2 rounded-md cursor-pointer flex justify-center items-center space-x-2 transition-colors"
         onClick={() => document.getElementById("fileInput")?.click()}
       >
         <AiOutlinePicture />

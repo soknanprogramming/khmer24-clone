@@ -9,20 +9,20 @@ import MoreFilters from './btn/MoreFilters';
 
 const OptionalMenu: React.FC = () => {
     return (
-        <div className='w-full px-2 py-1 h-24 bg-red-500 mt-3'>
-            <div className='flex h-10 justify-between'>
-                <h1 className='text-2xl'>Example</h1>
-                <div className='flex items-center'>
-                    <BsPercent className='size-8' />
-                    <FiTruck className='size-8 ml-3' />
-                    <AiOutlineAppstore className='size-8 ml-3' />
+        <div className='w-full px-4 py-3 bg-white mt-4 rounded-lg shadow-sm border border-gray-100'>
+            <div className='flex items-center justify-between mb-4'>
+                <h1 className='text-xl font-bold text-gray-800'>Filters</h1>
+                <div className='flex items-center space-x-4 text-gray-500'>
+                    <BsPercent className='size-6 hover:text-primary cursor-pointer transition-colors' />
+                    <FiTruck className='size-6 hover:text-primary cursor-pointer transition-colors' />
+                    <AiOutlineAppstore className='size-6 hover:text-primary cursor-pointer transition-colors' />
                 </div>
             </div>
-            <div className='h-10 flex justify-between mt-2'>
-                <div>
-                    <LocationDD classUtility='h-9'/>
+            <div className='flex justify-between items-center'>
+                <div className='flex-1 max-w-xs'>
+                    <LocationDD classUtility='h-10 w-full'/>
                 </div>
-                <MoreFilters classUtility='h-9'/>
+                <MoreFilters classUtility='h-10'/>
             </div>
         </div>
     );

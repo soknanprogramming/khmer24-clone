@@ -50,7 +50,7 @@ const BrandPopup: React.FC<BrandProp> = ({ subCategoriesId, setBrandId}) => {
             <div onClick={() => { setPopupOpen(true) }} className="cursor-pointer flex items-center h-full">
                 <input type="text" value={brandName} className="w-full h-11 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3" readOnly />
             </div>
-            <Popup isOpen={isPopupOpen} className="h-4/5 w-xl border-2 border-green-600 !p-0 overflow-x-auto bg-amber-200" onClose={() => setPopupOpen(false)}>
+            <Popup isOpen={isPopupOpen} className="h-4/5 w-xl !p-0 overflow-x-auto bg-white" onClose={() => setPopupOpen(false)}>
                 <div>
                     <div className="w-full bg-gray-100 rounded-lg overflow-hidden shadow">
                         <div>

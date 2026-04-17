@@ -14,8 +14,8 @@ const BrandOption: React.FC<BrandOptionProps> = ({brands}) => {
     }
 
     return (
-        <div className="w-6xl grid gap-0 h-32">
-            <div className="w-6xl flex bg-green-600 overflow-x-auto">
+        <div className="w-full h-32 mt-4 bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+            <div className="flex overflow-x-auto scrollbar-hide">
                 {
                     brands.map((brand) => (
                         <GalleryBrand key={brand.id} id={brand.id} title={brand.name} imgUrl={`${apiUrl}/uploads/${brand.icon}`} />

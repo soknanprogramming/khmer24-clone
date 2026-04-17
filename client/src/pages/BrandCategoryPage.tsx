@@ -56,7 +56,7 @@ const BrandCategoryPage: React.FC = () => {
 
     return (
         <div className="flex justify-center">
-            <div className="w-6xl bg-amber-100 mt-1.5">
+            <div className="w-6xl mt-4">
                 <LinkPage levelMainCategories={thisCategories.mainCategory.name} levelSubCategories={thisSubCategories.name} levelBrandCategories={AdField ? selectedBrand?.name : undefined}/>
                 
                 <OptionMenu/>

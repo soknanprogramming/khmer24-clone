@@ -26,12 +26,15 @@ const GalleryBrand: React.FC<GalleryBrandProps> = ({title, imgUrl}) => {
   };
 
     return (
-        <div onClick={() => addQueryParam("ad_field", toSlug(title))} className='bg-yellow-400 min-w-28 size-28 flex flex-col justify-center items-center text-center'>
-            <div id='image'>
-                <img src={imgUrl} alt="" className='size-15'/>
+        <div 
+            onClick={() => addQueryParam("ad_field", toSlug(title))} 
+            className='bg-white min-w-28 h-28 flex flex-col justify-center items-center text-center cursor-pointer border-r border-b border-gray-100 hover:bg-gray-50 transition-colors group'
+        >
+            <div id='image' className='mb-2 transition-transform group-hover:scale-110'>
+                <img src={imgUrl} alt={title} className='size-12 object-contain'/>
             </div>
             <div>
-                <p>{title}</p>
+                <p className='text-xs font-medium text-gray-700 group-hover:text-primary'>{title}</p>
             </div>
         </div>
     );

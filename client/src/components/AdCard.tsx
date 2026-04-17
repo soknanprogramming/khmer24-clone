@@ -52,7 +52,7 @@ const AdCard: React.FC<AdCardProps> = ({ ID, imgUrl, title, createdDate, locatio
                         {location && <span> &bull; {location}</span>}
                     </div>
                     <div className='mt-auto flex justify-between items-center'>
-                        <p className='text-red-600 font-bold text-lg'>
+                        <p className='text-primary font-bold text-lg'>
                             {typeof Price === 'number' ? `$${Price.toLocaleString()}` : Price}
                         </p>
                         <button className="text-gray-400 hover:text-red-500" onClick={(e) => e.preventDefault()}>

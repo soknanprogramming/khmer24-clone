@@ -14,10 +14,10 @@ const LocationDD: React.FC<LocationDDProp> = ({classUtility}) => {
     <div className="relative">
       <button
         onClick={toggleDropdown}
-        className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2.5 py-2.5 text-center inline-flex items-center ${classUtility}`}
+        className={`text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-2 focus:outline-none focus:ring-primary/20 font-medium rounded-md text-sm px-4 py-2 text-center inline-flex items-center justify-between transition-colors ${classUtility}`}
         type="button"
       >
-        Dropdown button
+        <span>All Locations</span>
         <svg
           className="w-2.5 h-2.5 ms-3"
           aria-hidden="true"

@@ -30,7 +30,7 @@ const Categories: React.FC<CategoriesProp> = ({ sizeItem = 6, items = []}) => {
             className = "grid-cols-6";
     }
     return (
-        <div className={`bg-amber-400 w-6xl grid gap-0 ${className}`}>
+        <div className={`w-full grid gap-px bg-gray-100 ${className}`}>
             {/* <GalleryItem sizeItem={sizeItem} imageURL='fake/computer-and-accessories.webp' tittle='Computers & Accessories' url='/subcategory'/> */}
             {
                 items.map((item, index) => (

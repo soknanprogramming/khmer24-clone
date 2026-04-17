@@ -51,12 +51,12 @@ const GalleryItem: React.FC<GalleryItemProps> = ({imageURL, tittle, url = "#", s
     }
 
     return(
-        <div className="">
-            <Link to={url} className={`${a_w} ${a_h} ${a_p} bg-blue-100 flex flex-col justify-center items-center text-center`}>
-                <div id="image-show" className={`bg-red-400 ${s} rounded-full`}>
-                    <img src={imageURL} className={s} alt="" />
+        <div className="group">
+            <Link to={url} className={`${a_w} ${a_h} ${a_p} bg-white flex flex-col justify-center items-center text-center transition-all hover:bg-gray-50 group-hover:shadow-inner`}>
+                <div id="image-show" className={`mb-3 ${s} transition-transform group-hover:scale-110`}>
+                    <img src={imageURL} className={`${s} object-contain`} alt={tittle} />
                 </div>
-                <p>{tittle}</p>
+                <p className="text-sm font-medium text-gray-700 group-hover:text-primary transition-colors">{tittle}</p>
             </Link>
         </div>
     )

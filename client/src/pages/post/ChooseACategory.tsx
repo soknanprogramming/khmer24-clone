@@ -18,8 +18,8 @@ const ChooseACategory: React.FC<ChooseACategoryProps> = ({setSubCategoriesId, se
   }));
 
   return (
-    <div className="w-full bg-gray-100 rounded-lg overflow-hidden shadow">
-      <div className="bg-blue-600 text-white font-semibold text-lg p-4">
+    <div className="w-full bg-white rounded-lg overflow-hidden shadow-md">
+      <div className="bg-primary text-white font-bold text-lg p-4">
         Choose a Category
       </div>
       <div>

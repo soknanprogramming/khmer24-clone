@@ -29,7 +29,7 @@ const PostPage: React.FC = () => {
     if (workspaceLocation === "main"){
         return (
             <div className="flex justify-center">
-                <div className='w-3xl bg-amber-100 mt-1.5'>
+                <div className='w-3xl mt-4'>
                     <ChooseOption/>
                 </div>
             </div>
@@ -39,7 +39,7 @@ const PostPage: React.FC = () => {
         if (subCategoriesId === null) throw new Error("RegisterPage: subCategoriesId is null");
         return (
             <div className="flex justify-center">
-                <div className='w-3xl bg-amber-100 mt-1.5'>
+                <div className='w-3xl mt-4'>
                     <ChooseSubCategory subCategoriesId={subCategoriesId} setSubCategoriesId={setSubCategoriesId} setWorkspaceLocation={setWorkspaceLocation} />
                 </div>
             </div>

@@ -181,39 +181,39 @@ const ChooseOption: React.FC = () => {
 
   const fieldHeightClass = 'h-11';
   const inputBorderClass = 'border border-gray-300 rounded-md';
-  const focusRingClass = 'focus:ring-2 focus:ring-blue-500 focus:border-blue-500';
+  const focusRingClass = 'focus:ring-2 focus:ring-primary focus:border-primary';
 
   if (loading || componentsLoading) return <div className="text-center py-10">Loading form...</div>;
   if (error || componentsError) return <div className="text-center py-10 text-red-500">Error: {error || componentsError}</div>;
 
   return (
-    <div className="bg-gray-50 p-4 font-sans">
+    <div className="bg-background-main py-8 px-4 font-sans">
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-6">
         {/* Photo Section */}
-        <div className="bg-white rounded-lg shadow p-5">
-          <p className="font-bold text-lg border-b pb-3 mb-4">Upload Photos</p>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <p className="font-bold text-xl text-gray-800 border-b border-gray-100 pb-3 mb-6">Upload Photos</p>
           <PhotoUpload onPhotosChange={setPhotos} />
         </div>
 
         {/* Product Details Section */}
-        <div className="bg-white rounded-lg shadow p-5">
-          <p className="font-bold text-lg border-b pb-3 mb-4">Product Details</p>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <p className="font-bold text-xl text-gray-800 border-b border-gray-100 pb-3 mb-6">Product Details</p>
           <div className="space-y-4">
             
             <div>
-              <label className="font-semibold text-gray-700 block mb-1">Product Name <b className="text-red-500">*</b></label>
-              <input type="text" name="name" value={formData.name} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3`} required />
+              <label className="font-semibold text-gray-700 block mb-1">Product Name <b className="text-primary">*</b></label>
+              <input type="text" name="name" value={formData.name} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3 transition-all`} required />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="font-semibold text-gray-700 block mb-1">Brand <b className="text-red-500">*</b></label>
+                <label className="font-semibold text-gray-700 block mb-1">Brand <b className="text-primary">*</b></label>
                 <BrandPopup subCategoriesId={1} setBrandId={setBrandId} />
               </div>
               
               <div>
-                <label className="font-semibold text-gray-700 block mb-1">Condition <b className="text-red-500">*</b></label>
-                <select name="conditionId" value={formData.conditionId} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2`} required>
+                <label className="font-semibold text-gray-700 block mb-1">Condition <b className="text-primary">*</b></label>
+                <select name="conditionId" value={formData.conditionId} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2 transition-all`} required>
                     <option value="1">Used</option>
                     <option value="2">New</option>
                 </select>
@@ -221,7 +221,7 @@ const ChooseOption: React.FC = () => {
 
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">VGA</label>
-                <select name="vga" value={formData.vga} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2`}>
+                <select name="vga" value={formData.vga} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2 transition-all`}>
                   <option value="">Select VGA</option>
                   {vga.map((item) => <option key={item.ID} value={item.ID}>{item.Name}</option>)}
                 </select>
@@ -229,7 +229,7 @@ const ChooseOption: React.FC = () => {
 
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">CPU</label>
-                <select name="cpu" value={formData.cpu} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2`}>
+                <select name="cpu" value={formData.cpu} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2 transition-all`}>
                   <option value="">Select CPU</option>
                   {cpu.map((item) => <option key={item.ID} value={item.ID}>{item.Name}</option>)}
                 </select>
@@ -237,7 +237,7 @@ const ChooseOption: React.FC = () => {
 
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">RAM</label>
-                <select name="ram" value={formData.ram} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2`}>
+                <select name="ram" value={formData.ram} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2 transition-all`}>
                   <option value="">Select RAM</option>
                   {ram.map((item) => <option key={item.ID} value={item.ID}>{item.Name}</option>)}
                 </select>
@@ -245,7 +245,7 @@ const ChooseOption: React.FC = () => {
               
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">Storage</label>
-                <select name="storage" value={formData.storage} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2`}>
+                <select name="storage" value={formData.storage} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2 transition-all`}>
                   <option value="">Select Storage</option>
                   {storage.map((item) => <option key={item.ID} value={item.ID}>{item.Name}</option>)}
                 </select>
@@ -253,7 +253,7 @@ const ChooseOption: React.FC = () => {
 
               <div>
                 <label className="font-semibold text-gray-700 block mb-1">Screen Size</label>
-                <select name="screenSize" value={formData.screenSize} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2`}>
+                <select name="screenSize" value={formData.screenSize} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-2 transition-all`}>
                   <option value="">Select Screen Size</option>
                   {screen.map((item) => <option key={item.ID} value={item.ID}>{item.Name}</option>)}
                 </select>
@@ -261,10 +261,10 @@ const ChooseOption: React.FC = () => {
             </div>
 
             <div>
-              <label className="font-semibold text-gray-700 block mb-1">Price <b className="text-red-500">*</b></label>
+              <label className="font-semibold text-gray-700 block mb-1">Price <b className="text-primary">*</b></label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
-                <input type="number" name="price" value={formData.price} onChange={handleChange} className={`w-full pl-7 ${fieldHeightClass} ${inputBorderClass} ${focusRingClass}`} required />
+                <input type="number" name="price" value={formData.price} onChange={handleChange} className={`w-full pl-7 ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} transition-all`} required />
               </div>
             </div>
 
@@ -277,20 +277,20 @@ const ChooseOption: React.FC = () => {
                   name="discount"
                   value={formData.discount}
                   onChange={handleChange}
-                  className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3 rounded-r-none`}
+                  className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3 rounded-r-none transition-all`}
                   placeholder="e.g., 10"
                 />
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, discountType: 'percent' }))}
-                  className={`px-4 ${fieldHeightClass} border-t border-b ${formData.discountType === 'percent' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 border-gray-300'}`}
+                  className={`px-4 ${fieldHeightClass} border-t border-b transition-colors ${formData.discountType === 'percent' ? 'bg-secondary text-white border-secondary' : 'bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200'}`}
                 >
                   %
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, discountType: 'dollar' }))}
-                  className={`px-4 ${fieldHeightClass} border rounded-r-md ${formData.discountType === 'dollar' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 border-gray-300'}`}
+                  className={`px-4 ${fieldHeightClass} border rounded-r-md transition-colors ${formData.discountType === 'dollar' ? 'bg-secondary text-white border-secondary' : 'bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200'}`}
                 >
                   $
                 </button>
@@ -305,30 +305,30 @@ const ChooseOption: React.FC = () => {
                 name="freeDelivery"
                 checked={formData.freeDelivery}
                 onChange={handleChange}
-                className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
               />
-              <label htmlFor="freeDelivery" className="ml-2 font-semibold text-gray-700">
+              <label htmlFor="freeDelivery" className="ml-2 font-semibold text-gray-700 cursor-pointer">
                 Free Delivery
               </label>
             </div>
 
             <div>
-              <label className="font-semibold text-gray-700 block mb-1">Description <b className="text-red-500">*</b></label>
-              <textarea name="description" value={formData.description} onChange={handleChange} rows={4} className={`w-full ${inputBorderClass} ${focusRingClass} px-3 py-2`} required></textarea>
+              <label className="font-semibold text-gray-700 block mb-1">Description <b className="text-primary">*</b></label>
+              <textarea name="description" value={formData.description} onChange={handleChange} rows={4} className={`w-full ${inputBorderClass} ${focusRingClass} px-3 py-2 transition-all`} required></textarea>
             </div>
           </div>
         </div>
         
         {/* Location Section */}
-        <div className="bg-white rounded-lg shadow p-5">
-            <p className="font-bold text-lg border-b pb-3 mb-4">Location & Address</p>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <p className="font-bold text-xl text-gray-800 border-b border-gray-100 pb-3 mb-6">Location & Address</p>
             <div className='w-full'>
-                <label className="font-semibold text-gray-700 block mb-1">Location <b className="text-red-500">*</b></label>
+                <label className="font-semibold text-gray-700 block mb-1">Location <b className="text-primary">*</b></label>
                 <LocationPopup setCityId={setCityId} cityId={cityId} setDistrictsId={setDistrictsId} districtsId={districtsId} setCommunesId={setCommunesId} communesId={communesId}/>
             </div>
              <div className='mt-4'>
-                <label className="font-semibold text-gray-700 block mb-1">Address <b className="text-red-500">*</b></label>
-                <input type="text" name="address" value={formData.address} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3`} required/>
+                <label className="font-semibold text-gray-700 block mb-1">Address <b className="text-primary">*</b></label>
+                <input type="text" name="address" value={formData.address} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3 transition-all`} required/>
             </div>
             <div id='mapping' className='mt-4'>
               <LocationMap onLocationChange={handleLocationChange} />
@@ -336,15 +336,15 @@ const ChooseOption: React.FC = () => {
         </div>
 
         {/* Contact Details */}
-        <div className="bg-white rounded-lg shadow p-5">
-          <p className="font-bold text-lg border-b pb-3 mb-4">Contact Details</p>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <p className="font-bold text-xl text-gray-800 border-b border-gray-100 pb-3 mb-6">Contact Details</p>
           <div className="space-y-4">
             <div>
-              <label className="font-semibold text-gray-700 block mb-1">Your Name <b className="text-red-500">*</b></label>
-              <input type="text" name="contactName" value={formData.contactName} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3`} required />
+              <label className="font-semibold text-gray-700 block mb-1">Your Name <b className="text-primary">*</b></label>
+              <input type="text" name="contactName" value={formData.contactName} onChange={handleChange} className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3 transition-all`} required />
             </div>
             <div>
-              <label className="font-semibold text-gray-700 block mb-1">Phone Number(s) <b className="text-red-500">*</b></label>
+              <label className="font-semibold text-gray-700 block mb-1">Phone Number(s) <b className="text-primary">*</b></label>
               {phoneNumbers.map((phone, index) => (
                 <div key={index} className="flex items-center space-x-2 mb-2">
                   <input 
@@ -352,25 +352,25 @@ const ChooseOption: React.FC = () => {
                       value={phone} 
                       onChange={(e) => handlePhoneNumberChange(index, e.target.value)} 
                       placeholder={`Phone Number ${index + 1}`} 
-                      className={`flex-1 h-11 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3`} 
+                      className={`flex-1 h-11 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary px-3 transition-all`} 
                       required={index === 0} 
                       pattern="[0-9]*" 
                   />
-                  {phoneNumbers.length > 1 && (<button type="button" onClick={() => removePhoneNumber(index)}><FaMinusCircle size={20} className='text-red-500'/></button>)}
-                  {index === phoneNumbers.length - 1 && phoneNumbers.length < 3 && (<button type="button" onClick={addPhoneNumber}><FaPlusCircle size={24} className='text-blue-500'/></button>)}
+                  {phoneNumbers.length > 1 && (<button type="button" onClick={() => removePhoneNumber(index)} className="hover:text-red-700 transition-colors"><FaMinusCircle size={20} className='text-red-500'/></button>)}
+                  {index === phoneNumbers.length - 1 && phoneNumbers.length < 3 && (<button type="button" onClick={addPhoneNumber} className="hover:text-primary-hover transition-colors"><FaPlusCircle size={24} className='text-primary'/></button>)}
                 </div>
               ))}
             </div>
             <div>
               <label className="font-semibold text-gray-700 block mb-1">Email</label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@email.com" className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3`}/>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@email.com" className={`w-full ${fieldHeightClass} ${inputBorderClass} ${focusRingClass} px-3 transition-all`}/>
             </div>
           </div>
         </div>
 
         {/* Submit Button */}
-        <div className="text-center mt-6">
-            <button type="submit" className="w-full bg-red-500 text-white font-bold text-lg rounded-lg py-3 hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-300">
+        <div className="text-center mt-10">
+            <button type="submit" className="w-full bg-primary text-white font-bold text-xl rounded-lg py-4 hover:bg-primary-hover focus:outline-none focus:ring-4 focus:ring-primary/30 transition-all shadow-md active:scale-[0.98]">
                 Post Your Ad
             </button>
         </div>

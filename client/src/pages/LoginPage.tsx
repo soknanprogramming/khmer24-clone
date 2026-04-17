@@ -84,21 +84,21 @@ const LoginPage: React.FC = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`w-full py-2 px-4 rounded text-white ${
+                        className={`w-full py-2 px-4 rounded font-bold text-white transition-colors ${
                             loading
                                 ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-blue-500 hover:bg-blue-600"
+                                : "bg-primary hover:bg-primary-hover shadow-sm"
                         }`}
                     >
                         {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
 
-                <p className="mt-4 text-sm text-center">
+                <p className="mt-6 text-sm text-center text-gray-600">
                     Don’t have an account?{" "}
                     <Link
                         to="/register"
-                        className="text-blue-500 hover:underline"
+                        className="text-secondary font-semibold hover:underline"
                     >
                         Create one
                     </Link>

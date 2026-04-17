@@ -34,8 +34,8 @@ const ChooseSubCategory : React.FC<ChooseACategoryProps> = ({subCategoriesId, se
   }));
 
   return (
-    <div className="w-full bg-gray-100 rounded-lg overflow-hidden shadow">
-      <div className="bg-blue-600 text-white flex items-center font-semibold text-lg p-4">
+    <div className="w-full bg-white rounded-lg overflow-hidden shadow-md">
+      <div className="bg-primary text-white flex items-center font-bold text-lg p-4">
         <button onClick={() => {
                 setWorkspaceLocation("main");
                 setSubCategoriesId(null);

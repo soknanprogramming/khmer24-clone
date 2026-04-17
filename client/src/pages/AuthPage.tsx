@@ -10,17 +10,17 @@ const AuthPage: React.FC = () => {
             <div className="flex flex-col gap-4 w-64">
                 <Link
                     to="/login"
-                    className="w-full text-center bg-blue-500 text-white py-3 rounded-lg shadow hover:bg-blue-600 transition"
+                    className="w-full text-center bg-primary text-white py-3 rounded-lg shadow-sm hover:bg-primary-hover transition font-bold"
                 >
                     Login
                 </Link>
-
                 <Link
                     to="/register"
-                    className="w-full text-center bg-green-500 text-white py-3 rounded-lg shadow hover:bg-green-600 transition"
+                    className="w-full text-center bg-secondary text-white py-3 rounded-lg shadow-sm hover:bg-blue-700 transition font-bold"
                 >
                     Register
                 </Link>
+
             </div>
         </div>
     );

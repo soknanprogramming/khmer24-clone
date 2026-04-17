@@ -32,59 +32,63 @@ const TopBar: React.FC = () => {
     };
 
     return(
-        <header className='bg-white z-80 sticky top-0 h-14 w-screen border-b-2 border-gray-300 shadow-sm border-solid flex items-center justify-center'>
-            <nav className='bg-amber-200 w-6xl h-11 flex items-center justify-between px-4'>
-                <div id='logo-and-lang' className='w-48 h-8 bg-amber-50 flex items-center'>
+        <header className='bg-white z-80 sticky top-0 h-16 w-screen border-b border-gray-200 shadow-sm flex items-center justify-center'>
+            <nav className='w-6xl h-full flex items-center justify-between px-4'>
+                <div id='logo-and-lang' className='flex items-center space-x-4'>
                     <Link to="/" onClick={handleLogoClick}>
-                        <img src="/img/khmer24.webp" alt="Khmer24 Logo" className='w-36'/>
+                        <img src="/img/khmer24.webp" alt="Khmer24 Logo" className='w-32'/>
                     </Link>
-                    <div className='m-3 cursor-pointer' onClick={changeLang}>
-                        {/* Corrected Logic: Show the flag for the current language */}
+                    <div className='cursor-pointer hover:opacity-80 transition-opacity' onClick={changeLang}>
                         {lang === "km" ? (
-                            <img src="/img/km-40x40.webp" alt="Khmer Language" className="size-6" />
+                            <img src="/img/km-40x40.webp" alt="Khmer Language" className="size-6 rounded-full border border-gray-200" />
                         ) : (
-                            <img src="/img/en-40x40.webp" alt="English Language" className='size-6'/>
+                            <img src="/img/en-40x40.webp" alt="English Language" className='size-6 rounded-full border border-gray-200'/>
                         )}
                     </div>
                 </div>
-                <div id='search' className='w-md h-10 relative'>
-                    <div className='w-full flex absolute top-1/2 -translate-y-1/2'>
-                        <button className='bg-blue-400 cursor-pointer py-1.5 border-2 border-r-[1px] w-36 flex-none'>All Category</button>
-                        <input className='bg-blue-400 px-2 py-1.5 border-2 border-l-[1px] flex-1' type="text" />
-                    </div>
-                    <button className='right-2 cursor-pointer absolute top-1/2 -translate-y-1/2'>
+                
+                <div id='search' className='w-md h-10 flex items-center bg-gray-100 rounded-md overflow-hidden border border-gray-300 focus-within:border-primary transition-colors'>
+                    <button className='px-4 text-sm font-medium text-gray-600 hover:bg-gray-200 h-full border-r border-gray-300'>
+                        All Categories
+                    </button>
+                    <input 
+                        className='flex-1 px-3 py-1.5 bg-transparent outline-none text-gray-700' 
+                        type="text" 
+                        placeholder="What are you looking for?"
+                    />
+                    <button className='px-4 text-gray-500 hover:text-primary transition-colors'>
                         <IoMdSearch className='size-6'/>
                     </button>
                 </div>
-                <div id='last-menu' className='w-2xs flex justify-between items-center bg-amber-100'>
-                    <div id='login' className='flex flex-1 justify-between px-6 bg-blue-200'>
+
+                <div id='last-menu' className='flex items-center space-x-6'>
+                    <div id='auth' className='flex items-center space-x-3 text-sm font-semibold'>
                         {!user ? (
                             <>
-                                <b><Link to="/login" className='mx-1'>Login</Link></b>
-                                <div className='mx-1'><b>Or</b></div>
-                                <b><Link to="/register" className='mx-1'>Register</Link></b>
+                                <Link to="/login" className='text-gray-700 hover:text-primary'>Login</Link>
+                                <span className='text-gray-300'>|</span>
+                                <Link to="/register" className='text-gray-700 hover:text-primary'>Register</Link>
                             </>
                         ):(
-                            <div className='flex justify-between items-center w-full'>
-                                <Link to="">
-                                    <FaBell className='size-6 '/>
+                            <div className='flex items-center space-x-4'>
+                                <Link to="" className='text-gray-600 hover:text-primary'>
+                                    <FaBell className='size-5'/>
                                 </Link>
-                                <Link to="">
+                                <Link to="" className='text-gray-600 hover:text-primary'>
                                     <IoChatbubbleEllipses className='size-6'/>
                                 </Link>
-                                <div>
-                                    <ProfileDropdown className='size-8' />
-                                    {/* <ProfileStyle classUtilities='border-1 border-blue-950 size-8' /> */}
-                                </div>
+                                <ProfileDropdown className='size-8 border border-gray-200 rounded-full' />
                             </div>
                         )}
                     </div>
-                    <div id='sell' className='bg-red-400 rounded-lg'>
-                        <button onClick={() => navigate("/post")} className='flex items-center p-2 cursor-pointer'>
-                            <MdAddAPhoto className='mx-0.5'/>
-                            <b><span className='mx-0.5'>Sell</span></b>
-                        </button>
-                    </div>
+                    
+                    <button 
+                        onClick={() => navigate("/post")} 
+                        className='bg-primary hover:bg-primary-hover text-white px-5 py-2 rounded-md font-bold flex items-center transition-colors shadow-sm'
+                    >
+                        <MdAddAPhoto className='mr-2'/>
+                        <span>Sell</span>
+                    </button>
                 </div>
             </nav>
         </header>

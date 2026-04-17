@@ -126,7 +126,7 @@ const AdDetailPage: React.FC = () => {
                             </button>
                         )}
                     </div>
-                    <p className="text-3xl font-bold text-red-600 my-2">${Number(product.Price).toLocaleString()}</p>
+                    <p className="text-3xl font-bold text-primary my-2">${Number(product.Price).toLocaleString()}</p>
 
                     <div className="text-sm text-gray-500 mb-4">
                         <span>AD ID: {product.ID}</span> &bull; 
@@ -155,7 +155,7 @@ const AdDetailPage: React.FC = () => {
                     <div className="bg-white p-4 rounded-lg shadow">
                          <h3 className="font-bold text-lg mb-2">{contactDetails?.Username || 'Seller'}</h3>
                          <p className="text-sm text-gray-500 mb-4">Member since Oct, 2014</p>
-                         <button className="w-full bg-green-500 text-white font-bold py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-green-600">
+                         <button className="w-full bg-secondary text-white font-bold py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors shadow-sm">
                              <FaPhone />
                              <span>{contactDetails?.PhoneNumber}</span>
                          </button>
